@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawdown-Minimization Portfolio Optimizer</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+
+    <!-- 🆕 HEADER SECTION -->
+    <header class="app-header">
+        <div class="container">
+            <div class="brand">Drawdown Optimizer</div>
+
+            <div class="header-right">
+                <!-- Theme Toggle -->
+                <button id="theme-btn" class="theme-toggle" title="Toggle Theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+
+                <!-- User Profile -->
+                <div class="user-profile" id="user-profile-menu">
+                    <div class="avatar" id="user-avatar">PM</div>
+                    <span class="user-name" id="user-name-display">Loading...</span>
+
+                    <!-- Dropdown -->
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item">Profile Settings</div>
+                        <div class="dropdown-item">Preferences</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" id="logout-btn">Log Out</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1️⃣ LANDING / OVERVIEW SECTION -->
+    <section id="landing" class="section landing-section">
+        <div class="container">
+            <div class="landing-content">
+                <div class="subtitle">Institutional Risk Management</div>
+                <h1 class="title">Drawdown-Minimization <br> Portfolio Optimizer</h1>
+                <p class="description">
+                    A sophisticated risk-first framework that prioritizes capital preservation.
+                    By minimizing Conditional Value at Risk (CVaR) instead of standard volatility,
+                    we achieve superior protection against tail events and market crashes.
+                </p>
+
+                <div class="key-features">
+                    <div class="feature">
+                        <span class="icon">🛡️</span>
+                        <span>Minimizes Drawdowns</span>
+                    </div>
+                    <div class="feature">
+                        <span class="icon">📉</span>
+                        <span>CVaR Optimization</span>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="btn btn-primary btn-large">
+                    Initialize System Workflow
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2️⃣ WORKFLOW VISUALIZATION -->
+    <nav id="pipeline-nav" class="pipeline-nav">
+        <div class="container">
+            <div class="pipeline-steps">
+                <div class="step" data-step="1">
+                    <div class="step-indicator">1</div>
+                    <div class="step-label">Ingestion</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <div class="step-indicator">2</div>
+                    <div class="step-label">Processing</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <div class="step-indicator">3</div>
+                    <div class="step-label">Risk Metrics</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="4">
+                    <div class="step-indicator">4</div>
+                    <div class="step-label">Optimization</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="5">
+                    <div class="step-indicator">5</div>
+                    <div class="step-label">Backtest</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="6">
+                    <div class="step-indicator">6</div>
+                    <div class="step-label">Stress Test</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="7">
+                    <div class="step-indicator">7</div>
+                    <div class="step-label">Report</div>
+                </div>
+            </div>
+
+            <div class="pipeline-controls">
+                <span id="pipeline-status" class="status-text">System Ready</span>
+                <button id="settings-btn" class="btn btn-secondary btn-small" style="margin-right: 1rem;">⚙️
+                    Settings</button>
+                <button id="run-pipeline-btn" class="btn btn-accent btn-small">Run Pipeline</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Optimization Configuration</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Asset Universe Configuration</label>
+                    <div id="asset-manager-root" class="asset-manager-container">
+                        <!-- Asset Columns Injected Here -->
+                    </div>
+                    <small>Select asset types and add symbols dynamically. Assets are validated against live
+                        markets.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="opt-capital">Total Investment Amount ($)</label>
+                    <input type="number" id="opt-capital" class="form-control" step="1000" value="100000">
+                </div>
+
+                <div class="form-group">
+                    <label for="opt-method">Optimization Strategy</label>
+                    <select id="opt-method" class="form-control">
+                        <option value="cvar">CVaR Minimization (Default)</option>
+                        <option value="mean_variance">Mean-Variance (Markowitz)</option>
+                        <option value="risk_parity">Risk Parity</option>
+                        <option value="tracking_error">Tracking Error Minimization</option>
+                        <option value="information_ratio">Max Information Ratio</option>
+                        <option value="kelly">Kelly Criterion</option>
+                        <option value="sortino">Max Sortino Ratio</option>
+                        <option value="omega">Max Omega Ratio</option>
+                        <option value="max_drawdown">Max Drawdown (Research)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="opt-cvar-alpha">CVaR Confidence (Alpha)</label>
+                    <input type="number" id="opt-cvar-alpha" class="form-control" step="0.01" min="0.01" max="0.5"
+                        value="0.05">
+                    <small>Tail probability (e.g., 0.05 = 95%)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="opt-min-return">Min Expected Return (Daily)</label>
+                    <input type="number" id="opt-min-return" class="form-control" step="0.0001" value="0.0002">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="btn btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content" class="container">
+        <!-- 3️⃣ DATA INGESTION -->
+        <section id="step-1" class="section workflow-section">
+            <div class="section-header">
+                <h2>01. Market Data Ingestion</h2>
+                <p>Loading historical price data for constituent assets from secure sources.</p>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Asset Universe</h3>
+                    <ul id="asset-list" class="data-list">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Data Parameters</h3>
+                    <div class="kv-grid" id="data-params"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4️⃣ DATA PROCESSING -->
+        <section id="step-2" class="section workflow-section">
+            <div class="section-header">
+                <h2>02. Return Engineering</h2>
+                <p>Transforming raw prices into log-returns and cleaning outliers.</p>
+            </div>
+            <div class="visual-explanation">
+                <div class="process-flow">
+                    <div class="node">Raw Prices</div>
+                    <div class="arrow">⬇️ Log Transformation</div>
+                    <div class="node">Log Returns</div>
+                    <div class="arrow">⬇️ Winsorization (1% / 99%)</div>
+                    <div class="node">Clean Returns</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5️⃣ RISK METRICS -->
+        <section id="step-3" class="section workflow-section">
+            <div class="section-header">
+                <h2>03. Baseline Risk Analysis</h2>
+                <p>Computing baseline risk metrics before optimization.</p>
+            </div>
+            <div class="metrics-grid" id="baseline-metrics">
+                <div class="metric-card">
+                    <div class="metric-label">Target CVaR Confidence</div>
+                    <div class="metric-value">95%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Risk-Free Rate</div>
+                    <div class="metric-value">2.0%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6️⃣ OPTIMIZATION -->
+        <section id="step-4" class="section workflow-section">
+            <div class="section-header">
+                <h2>04. CVaR Portfolio Optimization</h2>
+                <p>Constructing the optimal portfolio by minimizing CVaR.</p>
+            </div>
+            <div class="split-layout">
+                <div class="card">
+                    <h3>Optimal Weights</h3>
+                    <div class="chart-container">
+                        <canvas id="weightsChart"></canvas>
+                    </div>
+                    <div class="weights-table-container" style="margin-top: 20px;">
+                        <table class="weights-table" id="weights-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Weight</th>
+                                    <th>Allocation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Constraints Applied</h3>
+                    <ul class="check-list">
+                        <li>✅ Long-only positions</li>
+                        <li>✅ Fully invested</li>
+                        <li>✅ Drawdown minimization objective</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7️⃣ BACKTESTING -->
+        <section id="step-5" class="section workflow-section">
+            <div class="section-header">
+                <h2>05. Walk-Forward Backtesting</h2>
+                <p>Validating performance using rolling-window analysis.</p>
+            </div>
+            <div class="card full-width">
+                <h3>Cumulative Performance</h3>
+                <div class="chart-container big-chart">
+                    <canvas id="backtestChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8️⃣ MONTE CARLO -->
+        <section id="step-6" class="section workflow-section">
+            <div class="section-header">
+                <h2>06. Monte Carlo Stress Testing</h2>
+                <p>Simulating 1,000+ market scenarios to verify resilience.</p>
+            </div>
+            <div class="card full-width">
+                <h3>Drawdown Distribution</h3>
+                <div class="metrics-grid" id="stress-metrics">
+                    <div class="metric-card danger">
+                        <div class="metric-label">Worst Case Drawdown</div>
+                        <div class="metric-value" id="val-worst-dd">--</div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-label">95th Percentile DD</div>
+                        <div class="metric-value" id="val-95-dd">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Median Drawdown</div>
+                        <div class="metric-value" id="val-median-dd">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Average Drawdown</div>
+                        <div class="metric-value" id="val-average-dd">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Simulations</div>
+                        <div class="metric-value" id="val-sim-count">--</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9️⃣ EVALUATION -->
+        <section id="step-7" class="section workflow-section">
+            <div class="section-header">
+                <h2>07. Final Evaluation Report</h2>
+                <p>Comprehensive summary of the risk-first portfolio performance.</p>
+            </div>
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>Performance Summary</h3>
+                </div>
+                <div class="report-grid" id="final-report-grid">
+                    <div class="report-item">
+                        <span>Total Return</span>
+                        <strong id="res-total-return">--</strong>
+                    </div>
+                    <div class="report-item">
+                        <span>Annualized Volatility</span>
+                        <strong id="res-volatility">--</strong>
+                    </div>
+                    <div class="report-item highlight">
+                        <span>Max Drawdown</span>
+                        <strong id="res-max-dd">--</strong>
+                    </div>
+                    <div class="report-item highlight">
+                        <span>Calmar Ratio</span>
+                        <strong id="res-calmar">--</strong>
+                    </div>
+                    <div class="report-item">
+                        <span>CVaR (95%)</span>
+                        <strong id="res-cvar">--</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div>Drawdown-Minimization Portfolio Optimizer</div>
+            <div class="status-dot"></div> System Online
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

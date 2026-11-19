@@ -1,0 +1,84 @@
+backtesting:
+  rebalance_frequency: 21
+  window_size: 252
+capital:
+  total_investment: 100000
+data:
+  data_directory: data
+  end_date: '2024-01-01'
+  min_history_ratio: 0.9
+  start_date: '2008-11-13'
+  tickers:
+  - ^N225
+  - ^FTSE
+  - ^DJI
+  - ^RUT
+  - QQQ
+  - IVV
+  - BTC-USD
+  - ETH-USD
+  - BNB-USD
+  - XRP-USD
+  - NVDA
+  - JPY=X
+  - GBPUSD=X
+  - ^GSPC
+  - ^IXIC
+  - BRK-B
+  - META
+  - TSLA
+  - VOO
+  - AUDUSD=X
+  - NZDUSD=X
+  - GOOGL
+  - MSFT
+  - AAPL
+  - SPY
+  - AMZN
+  winsorize_lower_quantile: 0.01
+  winsorize_returns: true
+  winsorize_upper_quantile: 0.99
+evaluation:
+  drawdown_threshold: -0.3
+  periods_per_year: 252
+logging:
+  level: INFO
+  log_file: logs/pipeline.log
+  log_to_file: true
+optimization:
+  cvar_alpha: 0.5
+  long_only: true
+  mar: 0
+  method: risk_parity
+  min_expected_return: 0.5
+  omega_threshold: 0
+  solver: CLARABEL
+  weight_bounds:
+    max: 1
+    min: 0
+output:
+  results_directory: results
+  save_backtest_returns: true
+  save_results: true
+  save_simulation_results: true
+  save_weights: true
+preprocessing:
+  clip_extreme_returns: true
+  downside_only_returns: false
+  max_absolute_return: 0.5
+  max_missing_ratio: 0.0
+  minimum_observations: 100
+  standardize_returns: false
+project:
+  description: 'Portfolio optimization framework focused on minimizing maximum drawdown
+    and tail risk using CVaR, rolling optimization, Monte Carlo simulation, and walk-forward
+    backtesting.
+
+    '
+  name: Drawdown-Minimization Portfolio Optimizer
+  version: '1.0'
+simulation:
+  enabled: true
+  number_of_simulations: 1000
+  random_seed: 42
+  simulation_horizon: 252

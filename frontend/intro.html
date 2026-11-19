@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawdown-Minimization Portfolio Optimizer</title>
+    <meta name="description"
+        content="A quantitative finance portfolio optimizer focused on drawdown minimization and risk-adjusted returns using CVaR, Monte Carlo simulation, and live market data.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* Intro page layout */
+        .intro-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        /* Background container - decorative */
+        #bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        #bg-animation svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg-path {
+            fill: none;
+            stroke: var(--accent-color, #3b82f6);
+            stroke-linecap: round;
+            animation: pathFlow var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes pathFlow {
+            0% {
+                stroke-dashoffset: 1000;
+                opacity: 0.1;
+            }
+
+            50% {
+                stroke-dashoffset: 0;
+                opacity: 0.4;
+            }
+
+            100% {
+                stroke-dashoffset: -1000;
+                opacity: 0.1;
+            }
+        }
+
+        /* Intro card - glassmorphism */
+        .intro-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 580px;
+        }
+
+        .intro-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        [data-theme="light"] .intro-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        /* Tag label */
+        .intro-tag {
+            display: inline-block;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding: 4px 12px;
+            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            opacity: 0.9;
+        }
+
+        /* Title */
+        .intro-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        [data-theme="light"] .intro-title {
+            background: linear-gradient(135deg, #0f172a, #475569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Description */
+        .intro-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* Feature pills */
+        .intro-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+
+        .intro-feature {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .intro-feature:hover {
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+
+        /* CTA Button */
+        .intro-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            color: white;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+
+        .intro-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .intro-cta:active {
+            transform: translateY(0);
+        }
+
+        .cta-arrow {
+            transition: transform 0.2s;
+        }
+
+        .intro-cta:hover .cta-arrow {
+            transform: translateX(3px);
+        }
+
+        /* Divider */
+        .intro-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--border-color);
+            margin: 28px auto;
+        }
+
+        /* Bottom info */
+        .intro-footer {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .intro-card {
+                padding: 32px 24px;
+            }
+
+            .intro-title {
+                font-size: 1.6rem;
+            }
+
+            .intro-features {
+                gap: 8px;
+            }
+
+            .intro-feature {
+                font-size: 0.75rem;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body class="intro-body">
+
+    <div class="intro-container">
+        <div class="intro-card">
+            <h1 class="intro-title">Drawdown-Minimization<br>Portfolio Optimizer</h1>
+
+            <p class="intro-description">
+                A risk-first portfolio optimization framework that prioritizes capital preservation.
+                Powered by CVaR minimization, Monte Carlo stress testing, and live market data
+                to deliver institutional-grade, risk-adjusted portfolio construction across
+                multiple asset classes.
+            </p>
+
+            <div class="intro-features">
+                <span class="intro-feature">📊 Live Market Data</span>
+                <span class="intro-feature">🛡️ Drawdown Minimization</span>
+                <span class="intro-feature">📉 CVaR Optimization</span>
+                <span class="intro-feature">🎲 Monte Carlo Simulation</span>
+                <span class="intro-feature">💹 Stocks · ETFs · Crypto · Forex</span>
+                <span class="intro-feature">📈 Risk-Adjusted Returns</span>
+            </div>
+
+            <a href="/login" class="intro-cta" id="continue-btn">
+                Continue to Optimizer
+                <span class="cta-arrow">→</span>
+            </a>
+
+
+        </div>
+    </div>
+
+    <!-- Background Animation Script (purely visual, matches login page) -->
+    <script>
+        (function () {
+            const container = document.createElement('div');
+            container.id = 'bg-animation';
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 1920 1080');
+            svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+
+            for (let i = 0; i < 24; i++) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const yBase = 50 + (i * 40);
+                const amplitude = 80 + Math.random() * 60;
+
+                const d = `M-100 ${yBase} ` +
+                    `Q480 ${yBase - amplitude}, 960 ${yBase} ` +
+                    `T2020 ${yBase + amplitude * 0.5}`;
+
+                path.setAttribute('d', d);
+                path.setAttribute('class', 'bg-path');
+                path.setAttribute('stroke-width', (0.5 + Math.random() * 1.5).toFixed(2));
+                path.setAttribute('stroke-dasharray', '500 1000');
+                path.style.setProperty('--delay', `${i * 0.3}s`);
+                path.style.setProperty('--duration', `${15 + Math.random() * 15}s`);
+                path.style.opacity = 0.1 + (i * 0.015);
+
+                svg.appendChild(path);
+            }
+
+            container.appendChild(svg);
+            document.body.insertBefore(container, document.body.firstChild);
+        })();
+    </script>
+</body>
+
+</html>

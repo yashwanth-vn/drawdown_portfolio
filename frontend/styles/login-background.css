@@ -1,0 +1,145 @@
+/* 
+   login-background.css
+   Animated Background Paths - Scoped ONLY to login page
+   This file is imported ONLY by login.html
+*/
+
+/* Background Container */
+.background-paths-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.background-paths-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+/* Animated Path Styles */
+.animated-path {
+    fill: none;
+    stroke: var(--accent-color, #3b82f6);
+    stroke-linecap: round;
+    animation: pathFlow var(--duration, 20s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+
+/* Flow Animation */
+@keyframes pathFlow {
+    0% {
+        stroke-dashoffset: 1000;
+        opacity: 0.1;
+    }
+
+    25% {
+        opacity: 0.3;
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+        opacity: 0.5;
+    }
+
+    75% {
+        opacity: 0.3;
+    }
+
+    100% {
+        stroke-dashoffset: -1000;
+        opacity: 0.1;
+    }
+}
+
+/* Floating Animation for variety */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-10px) rotate(0.5deg);
+    }
+
+    50% {
+        transform: translateY(5px) rotate(-0.5deg);
+    }
+
+    75% {
+        transform: translateY(-5px) rotate(0.25deg);
+    }
+}
+
+/* Path Groups with staggered animations */
+.path-group-1 .animated-path {
+    stroke-dasharray: 500 1000;
+    --duration: 15s;
+}
+
+.path-group-2 .animated-path {
+    stroke-dasharray: 400 800;
+    --duration: 20s;
+    animation-direction: reverse;
+}
+
+.path-group-3 .animated-path {
+    stroke-dasharray: 600 1200;
+    --duration: 25s;
+}
+
+/* Gradient overlay for depth */
+.background-gradient-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(ellipse at center,
+            transparent 0%,
+            var(--bg-primary) 70%);
+    pointer-events: none;
+}
+
+/* Ensure auth container is above background */
+.auth-body .auth-container {
+    position: relative;
+    z-index: 10;
+}
+
+/* Enhanced auth card with glassmorphism */
+.auth-body .auth-card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .auth-body .auth-card {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .animated-path {
+    stroke: var(--accent-color, #2563eb);
+}
+
+[data-theme="light"] .background-gradient-overlay {
+    background: radial-gradient(ellipse at center,
+            transparent 0%,
+            var(--bg-primary, #f8fafc) 70%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .background-paths-svg {
+        transform: scale(1.5);
+    }
+}
